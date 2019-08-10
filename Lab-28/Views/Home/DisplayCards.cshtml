@@ -1,0 +1,13 @@
+﻿@model Draw
+@{
+    ViewData["Title"] = "DisplayCards";
+}
+
+<h1>DisplayCards</h1>
+
+@foreach (var card in Model.cards)
+{
+<p>@card.value of @card.suit.</p>
+    <img src="@card.image">
+}
+
