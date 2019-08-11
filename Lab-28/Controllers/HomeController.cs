@@ -23,20 +23,9 @@ namespace Lab_28.Controllers
         {
             if (_session.GetString("deck_id") == null)
             {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("https://deckofcardsapi.com");
-
-                var response = await client.GetAsync("api/deck/new/");
-                var content = await response.Content.ReadAsAsync<Deck>();
-
-                _session.SetString("deck_id", content.deck_id);
+                return RedirectToAction("CreateNewDeck");
             }
 
-            return View();
-        }
-
-        public async Task<IActionResult> DisplayCards()
-        {
             var client = new HttpClient();
             client.BaseAddress = new Uri("https://deckofcardsapi.com");
             var deckId = _session.GetString("deck_id");
@@ -44,6 +33,19 @@ namespace Lab_28.Controllers
             var response = await client.GetAsync($"api/deck/{deckId}/draw/?count=5");
             var content = await response.Content.ReadAsAsync<Draw>();
             return View(content);
+        }
+
+        public async Task<IActionResult> CreateNewDeck()
+        {
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://deckofcardsapi.com");
+
+            var response = await client.GetAsync("api/deck/new/");
+            var content = await response.Content.ReadAsAsync<Draw>();
+
+            _session.SetString("deck_id", content.deck_id);
+
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()
